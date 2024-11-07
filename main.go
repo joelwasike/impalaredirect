@@ -767,7 +767,179 @@ func convert(c *gin.Context) {
 	// Return the JSON response
 	c.JSON(resp.StatusCode, responseJSON)
 }
-func changecurrency(c *gin.Context) {
+func changepassword(c *gin.Context) {
+	url := "http://staging.mam-laka.com/api/?resource=password&action=change"
+
+	// Define a struct to parse the JSON request body
+	var credentials struct {
+		UserId               string `json:"userId" binding:"required"`
+		InputPasswordCurrent string `json:"inputPasswordCurrent" binding:"required"`
+		SourceCurrencyCode   string `json:"sourceCurrencyCode" binding:"required"`
+		InputPasswordConfirm string `json:"inputPasswordConfirm" binding:"required"`
+	}
+
+	// Bind JSON request body to the credentials struct
+	if err := c.ShouldBindJSON(&credentials); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email and password are required"})
+		return
+	}
+
+	// Prepare the body for the external request
+	body := map[string]string{
+		"userId":               credentials.UserId,
+		"inputPasswordCurrent": credentials.InputPasswordCurrent,
+		"sourceCurrencyCode":   credentials.SourceCurrencyCode,
+		"inputPasswordConfirm": credentials.InputPasswordConfirm,
+	}
+	jsonData, err := json.Marshal(body)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error encoding JSON"})
+		return
+	}
+
+	// Create the request
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating request"})
+		return
+	}
+
+	// Set headers
+	req.Header.Set("Authorization", "Bearer ZjdkMjZhNTJmMzZkNTYwNzI0YTE5MGUwODVjM2UwMjI=")
+	req.Header.Set("Content-Type", "application/json")
+
+	// Send the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error sending request"})
+		return
+	}
+	defer resp.Body.Close()
+
+	// Parse the response JSON into a map
+	var responseJSON map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&responseJSON); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error parsing response JSON"})
+		return
+	}
+
+	// Return the JSON response
+	c.JSON(resp.StatusCode, responseJSON)
+}
+func changepin(c *gin.Context) {
+	url := "http://staging.mam-laka.com/api/?resource=user&action=update"
+
+	// Define a struct to parse the JSON request body
+	var credentials struct {
+		Phone string `json:"phone" binding:"required"`
+		Pin   string `json:"pin" binding:"required"`
+	}
+
+	// Bind JSON request body to the credentials struct
+	if err := c.ShouldBindJSON(&credentials); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email and password are required"})
+		return
+	}
+
+	// Prepare the body for the external request
+	body := map[string]string{
+		"phone": credentials.Phone,
+		"pin":   credentials.Pin,
+	}
+	jsonData, err := json.Marshal(body)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error encoding JSON"})
+		return
+	}
+
+	// Create the request
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating request"})
+		return
+	}
+
+	// Set headers
+	req.Header.Set("Authorization", "Bearer ZjdkMjZhNTJmMzZkNTYwNzI0YTE5MGUwODVjM2UwMjI=")
+	req.Header.Set("Content-Type", "application/json")
+
+	// Send the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error sending request"})
+		return
+	}
+	defer resp.Body.Close()
+
+	// Parse the response JSON into a map
+	var responseJSON map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&responseJSON); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error parsing response JSON"})
+		return
+	}
+
+	// Return the JSON response
+	c.JSON(resp.StatusCode, responseJSON)
+}
+func forex(c *gin.Context) {
+	url := "http://staging.mam-laka.com/api/?resource=transaction&action=forex"
+
+	// Define a struct to parse the JSON request body
+	var credentials struct {
+		SourceCurrencyCode      string `json:"sourceCurrencyCode" binding:"required"`
+		DestinationCurrencyCode string `json:"destinationCurrencyCode" binding:"required"`
+	}
+
+	// Bind JSON request body to the credentials struct
+	if err := c.ShouldBindJSON(&credentials); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email and password are required"})
+		return
+	}
+
+	// Prepare the body for the external request
+	body := map[string]string{
+		"sourceCurrencyCode":      credentials.SourceCurrencyCode,
+		"destinationCurrencyCode": credentials.DestinationCurrencyCode,
+	}
+	jsonData, err := json.Marshal(body)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error encoding JSON"})
+		return
+	}
+
+	// Create the request
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating request"})
+		return
+	}
+
+	// Set headers
+	req.Header.Set("Authorization", "Bearer ZjdkMjZhNTJmMzZkNTYwNzI0YTE5MGUwODVjM2UwMjI=")
+	req.Header.Set("Content-Type", "application/json")
+
+	// Send the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error sending request"})
+		return
+	}
+	defer resp.Body.Close()
+
+	// Parse the response JSON into a map
+	var responseJSON map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&responseJSON); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error parsing response JSON"})
+		return
+	}
+
+	// Return the JSON response
+	c.JSON(resp.StatusCode, responseJSON)
+}
+func changebasecurrency(c *gin.Context) {
 	url := "http://staging.mam-laka.com/api/?resource=balance&action=update"
 
 	// Define a struct to parse the JSON request body
@@ -903,7 +1075,10 @@ func main() {
 	r.POST("/wallet2wallet", wallet2wallet)
 	r.POST("/convert", convert)
 	r.POST("/airtime", buyairtime)
-	r.POST("/changebasecurrency", changecurrency)
+	r.POST("/changebasecurrency", changebasecurrency)
+	r.POST("/changepassword", changepassword)
+	r.POST("/changepin", changepin)
+	r.POST("/forex", forex)
 
 	r.Run(":8080") // Run on port 8080
 }
